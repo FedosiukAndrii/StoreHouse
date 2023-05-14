@@ -1,0 +1,12 @@
+﻿@model List<Category> 
+
+<div class="row d-flex justify-content-center p-10">
+    <div class="col-2  ">
+        <div id="mySidenav" class="sidenav">
+            @foreach (var category in Model.OrderBy(i => i.Order))
+            {
+                <a href="#" class="ps-4">@category.Name</a>
+            }
+        </div>
+    </div>
+</div>
