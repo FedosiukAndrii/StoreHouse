@@ -4,8 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using StoreHouse.Models.Entities;
 using System.Diagnostics;
 
-namespace StoreHouse.Web.Controllers
+namespace StoreHouse.Web.Areas.Customer.Controllers
 {
+    [Area("Customer")]
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext _dbContext;

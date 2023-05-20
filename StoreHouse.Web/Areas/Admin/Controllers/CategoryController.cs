@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using StoreHouse.DataAccess.Data;
-using StoreHouse.Models.Entities;
 using StoreHouse.DataAccess.Interfaces;
+using StoreHouse.Models.Entities;
 
-namespace StoreHouse.Web.Controllers
+namespace StoreHouse.Web.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CategoryController : Controller
     {
         private readonly ICategoryRepository _categoryRepository;
@@ -96,7 +95,7 @@ namespace StoreHouse.Web.Controllers
         {
             var category = await _categoryRepository.Get(c => c.CategoryId == categoryId);
 
-            if(category is null)
+            if (category is null)
             {
                 return NotFound();
             }
