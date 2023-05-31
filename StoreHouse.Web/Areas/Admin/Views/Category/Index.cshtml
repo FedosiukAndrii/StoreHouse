@@ -16,7 +16,7 @@
 
 
     <table class="table table-bordered table-striped">
-        <thead class="shadow">
+        <thead class="shadow rounded">
             <tr>
                 <th>
                     Category Name
@@ -32,7 +32,7 @@
         <tbody>
             @foreach(var category in Model.OrderBy(o => o.Order))
             {
-                <tr class="shadow">
+                <tr class="shadow rounded">
                     <td>
                         @category.Name
                     </td>

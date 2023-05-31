@@ -1,0 +1,80 @@
+﻿@model ProductDetailVM
+
+<div class="">
+    <div class="row ">
+        <div class="col-7">
+            @{
+                var isActive = true;
+            }
+            <div id="image" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    @foreach (var image in Model.SelectedColor.Images)
+                    {
+                        <div class="carousel-item @(isActive ? "active" : "")">
+                            <img src="~/@image.ImageUrl" class="d-block w-75" alt="...">
+                        </div>
+                        isActive = false;
+                    }
+                </div>
+
+                <button class="carousel-control-prev" type="button" data-bs-target="#image" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#image" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+
+        </div>
+
+        <div class="col-5">
+            <div class="row mb-5">
+                <h5 class="text-muted">Avaliable colors:</h5>
+                <div class="my-2 d-flex">
+                    @foreach (var color in Model.Product.ProductColors.Select(pc => pc.Color))
+                    {
+                        <div class="@(color.ColorId == Model.SelectedColor.ColorId ? "square-selected" : "") mx-3 pb-1">
+                            <a asp-controller="Home" asp-action="Detail" asp-route-productId="@Model.Product.ProductId" asp-route-colorId="@color.ColorId" class="btn square p-0" style="background-color: #@(color.CssCode);"></a>
+                        </div>
+                    }
+                </div>
+                <h5 class="text-muted my-4">Price: @Model.Product.Price.ToString("c")</h5>
+            </div>
+            <div class="row">
+                <h5 class="text-muted">Description: </h5>
+                <div id="description" class="description-expanded">
+                    @Html.Raw(Model.Product.Description)
+                </div>
+                <a id="toggle-description" href="#" class="toggle-link">See Less</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var description = $('#description');
+            var toggleLink = $('#toggle-description');
+
+            toggleLink.on('click', function (e) {
+                e.preventDefault();
+                description.toggleClass('description-expanded');
+                description.toggleClass('description-collapsed');
+
+                if (description.hasClass('description-collapsed')) {
+                    toggleLink.text('See More');
+                } else {
+                    toggleLink.text('See Less');
+                }
+            });
+
+            description.removeClass('description-expanded');
+            description.addClass('description-collapsed');
+            toggleLink.text('See More');
+        });
+    </script>
+}

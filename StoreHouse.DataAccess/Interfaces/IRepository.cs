@@ -10,6 +10,5 @@ namespace StoreHouse.DataAccess.Interfaces
         public Task Delete(T entity);
         public Task Remove(T entity);
         public Task RemoveRange(IEnumerable<T> entities);
-
     }
 }

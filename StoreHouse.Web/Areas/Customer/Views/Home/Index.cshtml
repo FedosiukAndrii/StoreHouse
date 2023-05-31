@@ -1,8 +1,56 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model IEnumerable<Product>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building StoreHouse.Web apps with ASP.NET Core</a>.</p>
+<div class="row pb-3 d-flex">
+    @foreach (var product in Model)
+    {
+        bool isActive = true;
+        var colors = product.ProductColors.Select(pc => pc.Color);
+        <div class="col-lg-3 col-sm-6 ">
+            <div class="row p-2 ">
+                <div class="col-12 p-1">
+                    <div class="card border-0 p-3 shadow border-top border-5 rounded">
+                        <div id="image_@product.ProductId" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                @foreach (var image in product.ProductColors.FirstOrDefault()?.Images)
+                                {
+                                    <div class="carousel-item @(isActive ? "active" : "")">
+                                        <img src="~/@image.ImageUrl" class="d-block w-100" alt="...">
+                                    </div>
+                                    <div class="carousel-caption d-none d-md-block"></div>
+                                    isActive = false;
+                                }
+                            </div>
+                            <p class="text-center mt-3">
+                                <a asp-controller="Home" asp-action="Detail" asp-route-productId="@product.ProductId" class="text-decoration-none card-title h6 text-dark opacity-75 text-uppercase text-center">
+                                    @product.Title
+                                </a>
+                            </p>
+
+                            <hr />
+
+                            <div class="mt-2 d-flex justify-content-between align-items-center">
+                                <div class="h6 text-dark opacity-75">
+                                    @product.Price.ToString("C")
+                                </div>
+                                <div class="h6 text-dark opacity-75 d-flex align-items-center">
+                                    <div class="square m-1" style="background-color: #@(colors.FirstOrDefault().CssCode);"></div>
+                                    @(colors.Count() > 1 ? $"+{colors.Count() - 1}" : "")
+                                </div>
+                            </div>
+
+
+                            <button class="carousel-control-prev" type="button" data-bs-target="#image_@product.ProductId" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#image_@product.ProductId" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 </div>

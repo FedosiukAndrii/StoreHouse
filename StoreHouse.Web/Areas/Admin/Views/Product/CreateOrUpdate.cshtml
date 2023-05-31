@@ -1,0 +1,149 @@
+﻿@model ProductVM
+@{var isCreate = (Model.Product?.ProductId ?? 0) == 0;}
+
+<div class="card-body p-4">
+    <form method="post" enctype="multipart/form-data">
+        <div class="border p-3 mt-4">   
+            <input asp-for="Product.ProductId" value="@(Model.Product?.ProductId ?? 0)" hidden />
+            <div class="row">
+                <div class="@(isCreate ? "col-12" :"col-9")">
+                    <div class="row pb-2">
+                        <h2 class="text-primary">@(Model.Product == null || Model.Product == null ? "Create" : "Update") Product</h2>
+                        <hr />
+                    </div>
+                    <div class="py-2 mb-2 rounded">
+                        <label asp-for="Product.Title" class="mb-1 text-muted small"></label>
+                        <input asp-for="Product.Title" type="text" class="form-control bg-white border-0 shadow rounded" />
+                        <span asp-validation-for="Product.Title" class="text-danger"></span>
+                    </div>
+                    <div class="py-2 mb-2">
+                        <label asp-for="Product.Description" class="mb-1 text-muted small"></label>
+                        <textarea asp-for="Product.Description" class="form-control bg-white border-0 shadow rounded"></textarea>
+                        <span asp-validation-for="Product.Description" class="text-danger"></span>
+                    </div>
+                    <div class="py-2 mb-2">
+                        <label asp-for="Product.Price" class="mb-1 text-muted small"></label>
+                        <input asp-for="Product.Price" class="form-control bg-white border-0 shadow rounded" />
+                        <span asp-validation-for="Product.Price" class="text-danger"></span>
+                    </div>
+                    <div class="py-2 mb-2">
+                        <label asp-for="Product.CategoryId" class="mb-1 text-muted small"></label>
+                        <select asp-for="Product.CategoryId" asp-items="@Model.Categories" class="form-control bg-white border-0 shadow rounded">
+                            <option disabled selected>Select Category</option>
+                        </select>
+                    </div>
+                    <div class="py-2 mb-2">
+                        <label asp-for="ColorIds" class="mb-1 text-muted small"></label>
+                        <div class="rounded shadow py-2 mb-2">
+                            @{
+                                int i = 0;
+                            }
+                            @foreach (var color in Model.Colors)
+                            {
+                                var colorId = int.Parse(color.Value);
+                                var cssCode = Model.CssCodes[colorId];
+                                var isChecked = Model.ColorIds.Contains(colorId);
+
+                                <div class="d-flex align-items-center ms-2">
+                                    <input class="form-check-input rounded-1 m-2 color-checkbox" type="checkbox" id="color_@color.Value" name="ColorIds" value="@color.Value" @(isChecked ? "checked" : "")>
+                                    <div class="square m-1" style="background-color: #@cssCode;"></div>
+                                    @color.Text
+                                </div>
+
+                                <div class="py-2 mb-2 color-images" style="display: @(isChecked ? "block" : "none")">
+                                    <input type="number" name="colorImagesVM[@i].ColorId" hidden value="@colorId" />
+                                    <input type="file" name="colorImagesVM[@i].Images" multiple class="form-control bg-white border-0 shadow rounded" />
+                                </div>
+                                i++;
+                            }
+                            <span asp-validation-for="ColorIds" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div asp-validation-summary="All"></div>
+                </div>
+                <div class="col-3">
+                    @if ((Model.Product?.ProductId ?? 0) != 0)
+                    {
+                        var colors = Model.Product.ProductColors;
+                        @foreach (var color in colors)
+                        {
+                            bool isActive = true;
+                            <div id="carouselExampleControls_@color.ColorId" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-inner">
+                                    @foreach (var image in color.Images)
+                                    {    
+                                        <div class="carousel-item @(isActive ? "active" : "")">
+                                            <img src="~/@image.ImageUrl" class="d-block w-100" alt="...">
+                                        </div>
+                                        <div class="carousel-caption d-none d-md-block">
+                                            <h3>@color.Color.Title</h3>
+                                        </div>
+                                        isActive = false;
+                                    }
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls_@color.ColorId" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls_@color.ColorId" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+            
+            <div class="row mt-3 d-flex">
+                <div class="col-6 col-md-3">
+                    @if (Model.Product?.ProductId == null || Model.Product.ProductId == 0)
+                    {
+                        <button type="submit" class="btn btn-dark form-control">Create</button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-dark form-control">Update</button>
+                    }
+                </div>
+                <div class="col-6 col-md-3 ms-auto">
+                    <a asp-controller="Product" asp-action="Index" class="btn btn-secondary form-control">Back to list</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts{
+    @{
+        <partial name="_validationScriptsPartial"/>
+        <script>
+            tinymce.init({
+                selector: 'textarea',
+                plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage tinycomments tableofcontents footnotes mergetags autocorrect typography inlinecss',
+                toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+                tinycomments_mode: 'embedded',
+                tinycomments_author: 'Author name',
+                mergetags_list: [
+                    { value: 'First.Name', title: 'First Name' },
+                    { value: 'Email', title: 'Email' },
+                ]
+            });
+        </script>
+        <script>
+            const checkboxes = document.querySelectorAll('.color-checkbox');
+
+            checkboxes.forEach(function (checkbox) {
+                checkbox.addEventListener('change', function () {
+                    const imagesDiv = checkbox.parentElement.nextElementSibling;
+                    if (checkbox.checked) {                        
+                        imagesDiv.style.display = 'block';
+                    } else {
+                        imagesDiv.style.display = 'none';
+                    }
+                });
+            });
+        </script>
+    }
+}
