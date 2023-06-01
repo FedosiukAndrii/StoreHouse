@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using StoreHouse.Models.Utils;
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -25,24 +27,29 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                    <ul class="navbar-nav me-auto">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="Customer" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Content Managmant
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="nav-link text-dark" asp-area="Admin" asp-controller="Category" asp-action="Index">Category</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="nav-link text-dark" asp-area="Admin" asp-controller="Product" asp-action="Index">Clothes</a></li>
-                            </ul> 
-                        </li>
+                        @if(User.IsInRole(Roles.Role_Admin))
+                        {    
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Content Managmant
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="nav-link text-dark" asp-area="Admin" asp-controller="Category" asp-action="Index">Category</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="nav-link text-dark" asp-area="Admin" asp-controller="Product" asp-action="Index">Clothes</a></li>
+                                </ul> 
+                            </li>
+                        }
                     </ul>
+                    <partial name="_LoginPartial" />
+
                 </div>
             </div>
         </nav>

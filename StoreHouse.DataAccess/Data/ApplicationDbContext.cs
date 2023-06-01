@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using StoreHouse.Models.Entities;
 
 namespace StoreHouse.DataAccess.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -13,9 +15,12 @@ namespace StoreHouse.DataAccess.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<Color> Colors { get; set; }
         public DbSet<ProductColorImage> Images { get; set; }
+        public DbSet<Size> Sizes { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder); 
 
             modelBuilder.Entity<ProductColor>()
                 .HasKey(pc => new { pc.ProductId, pc.ColorId });
@@ -36,7 +41,7 @@ namespace StoreHouse.DataAccess.Data
                  .HasForeignKey(p => p.CategoryId);
 
             modelBuilder.Entity<ProductColor>()
-                .HasMany(pc => pc.Images) 
+                .HasMany(pc => pc.Images)
                 .WithOne(i => i.ProductColor)
                 .HasForeignKey(im => new { im.ProductId, im.ColorId });
 
@@ -220,6 +225,17 @@ namespace StoreHouse.DataAccess.Data
                 new ProductColor{ ProductId = 6, ColorId = 4},
                 new ProductColor{ ProductId = 6, ColorId = 8},
             };
+
+            var sizes = new[]
+            {
+                new Size{SizeId = 1, Title = "S", Order = 1},
+                new Size{SizeId = 2, Title = "M", Order = 2},
+                new Size{SizeId = 3, Title = "L", Order = 3},
+                new Size{SizeId = 4, Title = "XL", Order = 4},
+                new Size{SizeId = 5, Title = "XXL", Order = 5},
+            };
+
+            modelBuilder.Entity<Size>().HasData(sizes);
 
             modelBuilder.Entity<Category>().HasData(categories);
 

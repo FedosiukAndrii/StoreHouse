@@ -1,7 +1,7 @@
 ﻿@model ProductDetailVM
 
 <div class="">
-    <div class="row ">
+    <div class="row">
         <div class="col-7">
             @{
                 var isActive = true;
@@ -16,7 +16,6 @@
                         isActive = false;
                     }
                 </div>
-
                 <button class="carousel-control-prev" type="button" data-bs-target="#image" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Previous</span>
@@ -32,7 +31,7 @@
         <div class="col-5">
             <div class="row mb-5">
                 <h5 class="text-muted">Avaliable colors:</h5>
-                <div class="my-2 d-flex">
+                <div class=" d-flex mb-1">
                     @foreach (var color in Model.Product.ProductColors.Select(pc => pc.Color))
                     {
                         <div class="@(color.ColorId == Model.SelectedColor.ColorId ? "square-selected" : "") mx-3 pb-1">
@@ -40,7 +39,28 @@
                         </div>
                     }
                 </div>
+                <p class="text-muted small mb-4">@Model.SelectedColor.Color.Title</p>
+
+                <hr class="m-auto" />
+
                 <h5 class="text-muted my-4">Price: @Model.Product.Price.ToString("c")</h5>
+
+                <hr class="m-auto" />
+
+                <h5 class="text-muted my-4">Sizes: </h5>
+                @foreach (var size in Model.Sizes)
+                {
+                    <div class="row justify-content-around">
+                        <div class="col-5 text-center justify-content-around size-item sizeListItem py-2 " onclick="toggleSize(this)">
+                            @size.Title
+                        </div>
+                    </div>
+                }
+
+                <div class="row justify-content-center mt-3 p-0 border">
+                    <button type="submit" class="col-5 btn w-100 ">ADD TO CART</button>
+                </div>
+
             </div>
             <div class="row">
                 <h5 class="text-muted">Description: </h5>
@@ -76,5 +96,25 @@
             description.addClass('description-collapsed');
             toggleLink.text('See More');
         });
+    </script>
+    <script>
+        function toggleSize(element) {
+            var sizeItems = document.getElementsByClassName("size-item");
+            for (var i = 0; i < sizeItems.length; i++) {
+                if (sizeItems[i] === element) {
+                    sizeItems[i].classList.toggle("selected");
+                } else {
+                    sizeItems[i].style.display = "none";
+                }
+            }
+
+            if (element.classList.contains("selected")) {
+                element.style.display = "block";
+            } else {
+                for (var i = 0; i < sizeItems.length; i++) {
+                    sizeItems[i].style.display = "block";
+                }
+            }
+        }
     </script>
 }

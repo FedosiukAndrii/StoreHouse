@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StoreHouse.DataAccess.Interfaces;
@@ -6,10 +7,12 @@ using StoreHouse.Models.DTOs;
 using StoreHouse.Models.Entities;
 using StoreHouse.Models.Utils;
 using StoreHouse.Models.ViewModels;
+using System.Data;
 
 namespace StoreHouse.Web.Areas.Admin.Controllers;
 
 [Area("Admin")]
+[Authorize(Roles = Roles.Role_Admin)]
 public class ProductController : Controller
 {
     private const string ImagesPath = @"images\product";
