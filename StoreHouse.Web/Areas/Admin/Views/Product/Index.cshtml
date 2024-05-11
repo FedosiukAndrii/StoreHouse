@@ -1,0 +1,40 @@
+﻿@model List<Product>
+
+<div class="container">
+    <div class="row pt-4 pb-2 d-flex align-items-center">
+        <div class="col-6">
+            <h1>Clothes List</h1>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-controller="Product" asp-action="CreateOrUpdate" class="btn btn-secondary">
+                <h3>
+                    Create new product <i class="bi bi-plus-square"></i>
+                </h3>
+            </a>
+        </div>
+    </div>
+
+
+    <table id="tblData" class="table table-bordered table-striped" style="width:100%">
+        <thead class="shadow">
+            <tr>
+                <th>
+                    Title
+                </th>
+                <th>
+                    Category
+                </th>
+                <th>
+                    Price
+                </th>
+                <th>
+                    
+                </th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+@section Scripts{
+    <script src="~/js/product.js"></script>
+}

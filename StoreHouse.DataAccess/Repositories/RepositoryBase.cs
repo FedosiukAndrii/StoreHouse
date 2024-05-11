@@ -16,33 +16,33 @@ namespace StoreHouse.DataAccess.Repositories
             dbSet = dbContext.Set<T>();
         }
 
-        public async Task Add(T entity)
+        public virtual async Task Add(T entity)
         {
             dbSet.Add(entity);
 
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task Delete(T entity)
+        public virtual async Task Delete(T entity)
         {
             dbSet.Remove(entity);
 
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<T> Get(Expression<Func<T, bool>> filter)
+        public virtual async Task<T> Get(Expression<Func<T, bool>> filter)
         {
             IQueryable<T> query = dbSet.Where(filter);
 
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<T>> GetAll()
+        public virtual async Task<IEnumerable<T>> GetAll()
         {
             return await dbSet.ToListAsync();
         }
 
-        public async Task RemoveRange(IEnumerable<T> entities)
+        public virtual async Task RemoveRange(IEnumerable<T> entities)
         {
             dbSet.RemoveRange(entities);
 

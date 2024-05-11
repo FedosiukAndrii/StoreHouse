@@ -1,0 +1,131 @@
+﻿@model ProductDetailVM
+
+<form method="post">
+    <input asp-for="Product.ProductId" hidden/>
+    <input asp-for="Count" value="1" hidden/>
+    <input asp-for="SelectedColor.ColorId"hidden/>
+    <input id="SizeId" asp-for="SizeId" hidden/>
+    <div class="row">
+        <div class="col-7">
+            @{
+                var isActive = true;
+            }
+            <div id="image" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    @foreach (var image in Model.SelectedColor.Images)
+                    {
+                        <div class="carousel-item @(isActive ? "active" : "")">
+                            <img src="~/@image.ImageUrl" class="d-block w-75" alt="...">
+                        </div>
+                        isActive = false;
+                    }
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#image" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#image" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+
+        </div>
+
+        <div class="col-5">
+            <div class="row mb-5">
+                <h5 class="text-muted">Avaliable colors:</h5>
+                <div class=" d-flex mb-1">
+                    @foreach (var color in Model.Product.ProductColors.Select(pc => pc.Color))
+                    {
+                        <div class="@(color.ColorId == Model.SelectedColor.ColorId ? "square-selected" : "") mx-3 pb-1">
+                            <a asp-controller="Home" asp-action="Detail" asp-route-productId="@Model.Product.ProductId" asp-route-colorId="@color.ColorId" class="btn square p-0" style="background-color: #@(color.CssCode);"></a>
+                        </div>
+                    }
+                </div>
+                <p class="text-muted small mb-4">@Model.SelectedColor.Color.Title</p>
+
+                <hr class="m-auto" />
+
+                <h5 class="text-muted my-4">Price: @Model.Product.Price.ToString("c")</h5>
+
+                <hr class="m-auto" />
+
+                <h5 class="text-muted my-4">Sizes: </h5>
+                @foreach (var size in Model.Sizes)
+                {
+                    <div class="row justify-content-around">
+                        <div class="col-5 text-center justify-content-around size-item sizeListItem py-2 " onclick="toggleSize(this)" data-size-id="@size.SizeId">
+                            @size.Title
+                        </div>
+                    </div>
+                }
+
+                <div class="row justify-content-center mt-3 p-0 border">
+                    <button type="submit" class="col-5 btn w-100" id="addToCartButton" disabled>ADD TO CART</button>
+                </div>
+
+            </div>
+            <div class="row">
+                <h5 class="text-muted">Description: </h5>
+                <div id="description" class="description-expanded">
+                    @Html.Raw(Model.Product.Description)
+                </div>
+                <a id="toggle-description" href="#" class="toggle-link">See Less</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var description = $('#description');
+            var toggleLink = $('#toggle-description');
+
+            toggleLink.on('click', function (e) {
+                e.preventDefault();
+                description.toggleClass('description-expanded');
+                description.toggleClass('description-collapsed');
+
+                if (description.hasClass('description-collapsed')) {
+                    toggleLink.text('See More');
+                } else {
+                    toggleLink.text('See Less');
+                }
+            });
+
+            description.removeClass('description-expanded');
+            description.addClass('description-collapsed');
+            toggleLink.text('See More');
+        });
+    </script>
+    <script>
+        function toggleSize(element) {
+            var sizeItems = document.getElementsByClassName("size-item");
+            var hiddenInput = document.querySelector('input[Id="SizeId"]');
+            var addToCartButton = document.getElementById("addToCartButton");
+
+            for (var i = 0; i < sizeItems.length; i++) {
+                if (sizeItems[i] === element) {
+                    sizeItems[i].classList.toggle("selected");
+                    var sizeId = sizeItems[i].getAttribute("data-size-id");
+                    hiddenInput.value = sizeId;
+                } else {
+                    sizeItems[i].style.display = "none";
+                }
+            }
+
+            if (element.classList.contains("selected")) {
+                element.style.display = "block";
+                addToCartButton.disabled = false;
+            } else {
+                for (var i = 0; i < sizeItems.length; i++) {
+                    sizeItems[i].style.display = "block";
+                }
+                addToCartButton.disabled = true;
+            }
+        }
+    </script>
+}
