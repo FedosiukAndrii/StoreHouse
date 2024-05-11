@@ -217,3 +217,7 @@ button {
     margin: auto 0.25rem;
     box-shadow: 0 -2px;
 }
+
+.larger-icon {
+    font-size: 24px;
+}

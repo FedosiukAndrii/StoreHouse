@@ -1,6 +1,10 @@
 ﻿@model ProductDetailVM
 
-<div class="">
+<form method="post">
+    <input asp-for="Product.ProductId" hidden/>
+    <input asp-for="Count" value="1" hidden/>
+    <input asp-for="SelectedColor.ColorId"hidden/>
+    <input id="SizeId" asp-for="SizeId" hidden/>
     <div class="row">
         <div class="col-7">
             @{
@@ -51,14 +55,14 @@
                 @foreach (var size in Model.Sizes)
                 {
                     <div class="row justify-content-around">
-                        <div class="col-5 text-center justify-content-around size-item sizeListItem py-2 " onclick="toggleSize(this)">
+                        <div class="col-5 text-center justify-content-around size-item sizeListItem py-2 " onclick="toggleSize(this)" data-size-id="@size.SizeId">
                             @size.Title
                         </div>
                     </div>
                 }
 
                 <div class="row justify-content-center mt-3 p-0 border">
-                    <button type="submit" class="col-5 btn w-100 ">ADD TO CART</button>
+                    <button type="submit" class="col-5 btn w-100" id="addToCartButton" disabled>ADD TO CART</button>
                 </div>
 
             </div>
@@ -71,7 +75,7 @@
             </div>
         </div>
     </div>
-</div>
+</form>
 
 @section Scripts{
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -100,9 +104,14 @@
     <script>
         function toggleSize(element) {
             var sizeItems = document.getElementsByClassName("size-item");
+            var hiddenInput = document.querySelector('input[Id="SizeId"]');
+            var addToCartButton = document.getElementById("addToCartButton");
+
             for (var i = 0; i < sizeItems.length; i++) {
                 if (sizeItems[i] === element) {
                     sizeItems[i].classList.toggle("selected");
+                    var sizeId = sizeItems[i].getAttribute("data-size-id");
+                    hiddenInput.value = sizeId;
                 } else {
                     sizeItems[i].style.display = "none";
                 }
@@ -110,10 +119,12 @@
 
             if (element.classList.contains("selected")) {
                 element.style.display = "block";
+                addToCartButton.disabled = false;
             } else {
                 for (var i = 0; i < sizeItems.length; i++) {
                     sizeItems[i].style.display = "block";
                 }
+                addToCartButton.disabled = true;
             }
         }
     </script>

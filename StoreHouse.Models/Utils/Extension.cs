@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using StoreHouse.Models.Entities;
+using System.Security.Claims;
 
 namespace StoreHouse.Models.Utils
 {
@@ -17,5 +18,11 @@ namespace StoreHouse.Models.Utils
                 Text = c.Title,
                 Value = c.ColorId.ToString()
             });
+
+        public static string GetId(this ClaimsPrincipal claims)
+        {
+			var claimsIdentity = (ClaimsIdentity)claims.Identity;
+			return claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+		}
     }
 }

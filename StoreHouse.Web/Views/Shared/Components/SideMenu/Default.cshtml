@@ -5,7 +5,7 @@
         <div id="mySidenav" class="sidenav">
             @foreach (var category in Model.OrderBy(i => i.Order))
             {
-                <a href="#" class="ps-4">@category.Name</a>
+                <a asp-area="Customer" asp-controller="Home" asp-action="Index" asp-route-categoryId="@category.CategoryId" class="navbar-brand text-uppercase my-4 ps-4">@category.Name</a>
             }
         </div>
     </div>
